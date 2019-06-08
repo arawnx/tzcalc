@@ -21,8 +21,8 @@ subtractlist :: Num a => [a] -> [a] -> [a]
 subtractlist (x:xs) (y:ys) = (y-x:(subtractlist xs ys))
 subtractlist [] [] = []
 
-mostcommon :: Ord a => [a] -> a 
-mostcommon = snd . maximum . map (\xs -> (length xs, head xs)) . group . sort
+plurality :: Ord a => [a] -> a 
+plurality = snd . maximum . map (\xs -> (length xs, head xs)) . group . sort
 
 composerange :: [Int] -> [Int] -> [Int]
 composerange (x:xs) (y:ys) 
@@ -31,7 +31,7 @@ composerange (x:xs) (y:ys)
 composerange [] [] = []
 
 besttime :: [Int] -> [Int] -> [Int] -> Int
-besttime tz rise fall = mostcommon wakingHours
+besttime tz rise fall = plurality wakingHours
     where wakingHours = composerange riseHours fallHours
           riseHours   = map (`mod` 23) $ subtractlist tz rise
           fallHours   = map (`mod` 23) $ subtractlist tz fall
