@@ -21,8 +21,11 @@ subtractlist :: Num a => [a] -> [a] -> [a]
 subtractlist (x:xs) (y:ys) = (y-x:(subtractlist xs ys))
 subtractlist [] [] = []
 
-plurality :: Ord a => [a] -> a 
-plurality = snd . maximum . map (\xs -> (length xs, head xs)) . group . sort
+pluralityMin :: Ord a => [a] -> a 
+pluralityMin = snd . minimum . map (\xs -> (length xs, head xs)) . group . sort
+
+pluralityMax :: Ord a => [a] -> a 
+pluralityMax = snd . maximum . map (\xs -> (length xs, head xs)) . group . sort
 
 composerange :: [Int] -> [Int] -> [Int]
 composerange (x:xs) (y:ys) 
@@ -30,8 +33,14 @@ composerange (x:xs) (y:ys)
     | otherwise = [x..y] ++ (composerange xs ys)
 composerange [] [] = []
 
-besttime :: [Int] -> [Int] -> [Int] -> Int
-besttime tz rise fall = plurality wakingHours
+besttimeMin :: [Int] -> [Int] -> [Int] -> Int
+besttimeMin tz rise fall = pluralityMin wakingHours
+    where wakingHours = composerange riseHours fallHours
+          riseHours   = map (`mod` 23) $ subtractlist tz rise
+          fallHours   = map (`mod` 23) $ subtractlist tz fall
+
+besttimeMax :: [Int] -> [Int] -> [Int] -> Int
+besttimeMax tz rise fall = pluralityMax wakingHours
     where wakingHours = composerange riseHours fallHours
           riseHours   = map (`mod` 23) $ subtractlist tz rise
           fallHours   = map (`mod` 23) $ subtractlist tz fall
